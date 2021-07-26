@@ -1,0 +1,23 @@
+fileFormatVersion: 2
+guid: 5fc5ba8d8cda911499513639d145f49d
+TrueTypeFontImporter:
+  externalObjects: {}
+  serializedVersion: 4
+  fontSize: 16
+  forceTextureCase: -2
+  characterSpacing: 0
+  characterPadding: 1
+  includeFontData: 1
+  fontName: DFGuYinMedium-B5
+  fontNames:
+  - DFGuYinMedium-B5
+  fallbackFontReferences:
+  - {fileID: 12800000, guid: 7af4082fde122f04cbd874581e7919b3, type: 3}
+  customCharacters: 
+  fontRenderingMode: 0
+  ascentCalculationMode: 1
+  useLegacyBoundsCalculation: 0
+  shouldRoundAdvanceValue: 1
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
