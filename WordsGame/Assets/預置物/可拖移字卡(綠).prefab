@@ -110,6 +110,7 @@ GameObject:
   - component: {fileID: 7114076896570825634}
   - component: {fileID: -6231725205796370544}
   - component: {fileID: 6905747184870708417}
+  - component: {fileID: -1428770622802384197}
   m_Layer: 5
   m_Name: "\u53EF\u62D6\u79FB\u5B57\u5361(\u7DA0)"
   m_TagString: "\u540D\u8A5E"
@@ -158,7 +159,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0, g: 0.83921576, b: 0.23529413, a: 1}
+  m_Color: {r: 0, g: 0.9960785, b: 0.2784314, a: 1}
   m_RaycastTarget: 1
   m_Maskable: 1
   m_OnCullStateChanged:
@@ -235,6 +236,7 @@ MonoBehaviour:
   LastBlock: {fileID: 0}
   inCardBox: 1
   CardWords: 
+  GM: {fileID: 0}
 --- !u!61 &7114076896570825634
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -301,3 +303,15 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
+--- !u!114 &-1428770622802384197
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6931285621971503299}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4f64fbb65a0acf48843726ef4076ae0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

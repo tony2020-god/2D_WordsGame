@@ -15,9 +15,12 @@ public class MoveWithMouse : MonoBehaviour, IDragHandler, IBeginDragHandler, IEn
     public bool inCardBox =true;
     public string CardWords;
     Vector3 originTraslate;
+    public GameManager GM;
 
     public void Start()
     {
+        GM = GameObject.Find("遊戲管理器").GetComponent<GameManager>();
+        
         CardWords = gameObject.transform.Find("字").GetComponent<Text>().text;
         print(CardWords);
     }
@@ -68,13 +71,15 @@ public class MoveWithMouse : MonoBehaviour, IDragHandler, IBeginDragHandler, IEn
                         {
                             LastBlock.GetComponent<BlockFull>().IfBlockfull = false;
                         }
-                    }
-                    
+                    }                    
                     LastBlock = Block;
                     Block.GetComponent<BlockFull>().IfBlockfull = true;
                     Block.GetComponent<BlockFull>().CurrentText = CardWords;
                     StartinCardBox = false;
-                    StartCoroutine(GameObject.Find("遊戲管理器").GetComponent<GameManager>().Story());                
+                    if (Level.WhichLevel == 0) GM.InMenu();
+                    else if(Level.WhichLevel == 1) StartCoroutine(GM.Level1());
+                    else if(Level.WhichLevel == 2) StartCoroutine(GM.Level2());
+                    print(Level.WhichLevel);
                 }
                 else
                 {

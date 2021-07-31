@@ -21,6 +21,7 @@ public class dialogue : MonoBehaviour
     public AudioClip typeSound;
     public bool PlaySound =false;
     public GameObject blackImage;
+    public bool HaveSantance;
 
     public void Awake()
     {
@@ -28,8 +29,16 @@ public class dialogue : MonoBehaviour
     }
     public void Start()
     {
-        string[] wordsText = { "哎呀~頭好痛，只記得昨天和朋友喝了幾杯，不小心喝醉了，之後的事完全沒印象...", "[我]從[床]上起來，發現自己已經被[移動到][房間]，我的朋友也不在這個房間，不過這裡為什麼這麼安靜…", "我正對面的[門]好像是唯一的出口", "看來我需要「檢視」一下這個陌生的地方到底是哪裡…" };
-        words = wordsText;
+        if(Level.WhichLevel == 1)
+        {
+            string[] wordsText = { "哎呀~頭好痛，只記得昨天和朋友喝了幾杯，不小心喝醉了，之後的事完全沒印象...", "[我]從[床]上起來，發現自己已經被[移動到][房間]，我的朋友也不在這個房間，不過這裡為什麼這麼安靜…", "我正對面的[門]好像是唯一的出口", "看來我需要「檢視」一下這個陌生的地方到底是哪裡…" };
+            words = wordsText;
+        }
+        if (Level.WhichLevel == 2)
+        {
+            string[] wordsText = { "我使用鑰匙打開門後，外面就突然下起了大雨，一道閃電滑過，而眼前的景象把我從逃離的幻想拉回殘酷的現實", "「我」稍微看了一下，這陰暗的房間似乎是「客廳」，看來要好好的[檢視]一下有甚麼有用的情報..." };
+            words = wordsText;
+        }
         Invoke("StartEffect", 3);
         timer = 0;
     }
@@ -37,6 +46,10 @@ public class dialogue : MonoBehaviour
     public void Update()
     {
         OnStartWriter();
+        if (Input.GetMouseButtonDown(0))
+        {
+            NextSantance();
+        }
     }
 
     public void StartEffect()
@@ -45,12 +58,13 @@ public class dialogue : MonoBehaviour
         isActive = true;
         blackImage.SetActive(false);
     }
+
     /// 打字
     public void OnStartWriter()
     {
         if (isActive == true)
-        {         
-            print(isActive);
+        {
+            HaveSantance = false;
             timer += Time.deltaTime;
             if (timer >= charsPerSecond)
             { //判断計時器時間是否到達
@@ -66,8 +80,21 @@ public class dialogue : MonoBehaviour
 
                 if (currentPos >= words[strindex].Length)
                 {
-                    OnFinish();
-                    Invoke("NextSantance", 2);
+                    if (strindex < words.Length - 1)
+                    {
+                        isActive = false;
+                        aud.Stop();
+                        PlaySound = false;
+                        timer = 0;
+                        currentPos = 0;
+                        HaveSantance = true;
+                        //Invoke("NextSantance", 1.5f);
+                    }
+                    else
+                    {
+                        strindex = 0;
+                        OnFinish();
+                    }
                 }
             }
         }
@@ -78,33 +105,36 @@ public class dialogue : MonoBehaviour
         isActive = false;
         aud.Stop();
         PlaySound = false;
+        HaveSantance = false;
         timer = 0;
         currentPos = 0;
-        if(GameManager.instance.GameOver == true) GameOverImage.SetActive(true);
-        if (GameManager.instance.pass == true) PassImage.SetActive(true);
         Invoke("imageCover", 0.5f);
+        if (GameManager.instance.GameOver == true) Invoke("GameOver", 2f);
+        if (GameManager.instance.pass == true) Invoke("PassGame", 2f);
     }
     public void NextSantance()
     {
-        if (strindex < words.Length - 1)
+        if (HaveSantance == true)
         {
             CannotPointImage.SetActive(true);
             timer = 0;
             currentPos = 0;
             strindex++; //下一句
-            GameManager.instance.FirstSantance ++;
+            GameManager.instance.FirstSantance++;
             StartCoroutine(GameManager.instance.FristCard());
             isActive = true;
-        }
-        else
-        {
-            strindex = 0;
-            OnFinish();
         }
     }
     public void imageCover()
     {
-        if (strindex >= words.Length - 1) CannotPointImage.SetActive(false);
+        CannotPointImage.SetActive(false);
     }
-
+    public void GameOver()
+    {
+        GameOverImage.SetActive(true);
+    }
+    public void PassGame()
+    {
+        PassImage.SetActive(true);
+    }
 }    

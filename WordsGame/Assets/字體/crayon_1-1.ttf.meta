@@ -1,0 +1,23 @@
+fileFormatVersion: 2
+guid: 4063002af04aaa443b4de496fc97c6b3
+TrueTypeFontImporter:
+  externalObjects: {}
+  serializedVersion: 4
+  fontSize: 16
+  forceTextureCase: -2
+  characterSpacing: 0
+  characterPadding: 1
+  includeFontData: 1
+  fontName: Nagurigaki Crayon
+  fontNames:
+  - Nagurigaki Crayon
+  fallbackFontReferences:
+  - {fileID: 12800000, guid: 940585cd2d56bfb41bd3c11c6859ae12, type: 3}
+  customCharacters: 
+  fontRenderingMode: 0
+  ascentCalculationMode: 1
+  useLegacyBoundsCalculation: 0
+  shouldRoundAdvanceValue: 1
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
