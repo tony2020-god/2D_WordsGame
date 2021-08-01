@@ -22,7 +22,8 @@ public class dialogue : MonoBehaviour
     public bool PlaySound =false;
     public GameObject blackImage;
     public bool HaveSantance;
-
+    public bool GameOverBool;
+    public bool PassBool;
     public void Awake()
     {
         instance = this;
@@ -49,6 +50,8 @@ public class dialogue : MonoBehaviour
         if (Input.GetMouseButtonDown(0))
         {
             NextSantance();
+            GameOver();
+            PassGame();
         }
     }
 
@@ -109,8 +112,8 @@ public class dialogue : MonoBehaviour
         timer = 0;
         currentPos = 0;
         Invoke("imageCover", 0.5f);
-        if (GameManager.instance.GameOver == true) Invoke("GameOver", 2f);
-        if (GameManager.instance.pass == true) Invoke("PassGame", 2f);
+        if (GameManager.instance.GameOver == true) GameOverBool = true;
+        if (GameManager.instance.pass == true) PassBool = true;
     }
     public void NextSantance()
     {
@@ -131,10 +134,10 @@ public class dialogue : MonoBehaviour
     }
     public void GameOver()
     {
-        GameOverImage.SetActive(true);
+        if (GameOverBool == true) GameOverImage.SetActive(true);
     }
     public void PassGame()
     {
-        PassImage.SetActive(true);
+        if(PassBool == true) PassImage.SetActive(true);
     }
 }    

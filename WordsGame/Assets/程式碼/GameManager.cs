@@ -94,7 +94,7 @@ public class GameManager : MonoBehaviour
     {
         downladder = true;
         WhereIsSofa = "鐵門";
-        time = 30;
+        time = 20;
     }
 
     //選單     
@@ -1377,6 +1377,35 @@ public class GameManager : MonoBehaviour
                             dialogue.instance.words = wordsText;
                             dialogue.instance.StartEffect();
                         }
+                    }
+                }
+            }
+            //手槍殺死我
+            else if (Name1.GetComponent<BlockFull>().CurrentText == "手槍" && Motion.GetComponent<BlockFull>().CurrentText == "殺死" && Name2.GetComponent<BlockFull>().CurrentText == "我")
+            {
+                if (GetGun == false)
+                {
+                    string[] wordsText = { "我尚未取得手槍" };
+                    dialogue.instance.words = wordsText;
+                    dialogue.instance.StartEffect();
+                }
+                else
+                {
+                    if (RaiseGun == false)
+                    {
+                        string[] wordsText = { "我要先舉起手槍!" };
+                        dialogue.instance.words = wordsText;
+                        dialogue.instance.StartEffect();
+                    }
+                    else
+                    {                       
+                        string[] wordsText = { "我覺得這個世界好難，所以我自殺了" };
+                        dialogue.instance.words = wordsText;
+                        dialogue.instance.StartEffect();              
+                        aud.PlayOneShot(FireSound);
+                        yield return new WaitForSeconds(1f);
+                        aud.PlayOneShot(DeadSound);
+                        GameOver = true;
                     }
                 }
             }
