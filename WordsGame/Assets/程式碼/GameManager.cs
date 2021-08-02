@@ -94,6 +94,7 @@ public class GameManager : MonoBehaviour
     {
         downladder = true;
         WhereIsSofa = "鐵門";
+        WhereIsLadder = "櫃子";
         time = 20;
     }
 
@@ -455,7 +456,7 @@ public class GameManager : MonoBehaviour
                 }
                 else
                 {
-                    if(WhereIsMe != "櫃子")
+                    if(Neerladder == false)
                     {
                         string[] wordsText = { "我離梯子太遠了，無法檢視" };
                         dialogue.instance.words = wordsText;
@@ -723,21 +724,27 @@ public class GameManager : MonoBehaviour
             //我移動到梯子
             else if (Name1.GetComponent<BlockFull>().CurrentText == "我" && Motion.GetComponent<BlockFull>().CurrentText == "移動到" && Name2.GetComponent<BlockFull>().CurrentText == "梯子")
             {
-                if(Neerladder==true)
-                {
-                    string[] wordsText = { "我現在就在梯子旁邊" };
-                    dialogue.instance.words = wordsText;
-                    dialogue.instance.StartEffect();
-                }
-                else
+                if(seeladder == true)
                 {
                     if (Neerladder == true)
+                    {
+                        string[] wordsText = { "我現在就在梯子旁邊" };
+                        dialogue.instance.words = wordsText;
+                        dialogue.instance.StartEffect();
+                    }
+                    else
                     {
                         string[] wordsText = { "我移動到" + WhereIsLadder + "前的梯子" };
                         dialogue.instance.words = wordsText;
                         dialogue.instance.StartEffect();
                         WhereIsMe = WhereIsLadder;
                     }
+                }
+                else
+                {
+                    string[] wordsText = { "梯子還在櫃子裡面，我必須要先拿出來" };
+                    dialogue.instance.words = wordsText;
+                    dialogue.instance.StartEffect();
                 }
             }
             //其他可能
