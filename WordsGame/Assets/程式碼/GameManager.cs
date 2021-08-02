@@ -804,8 +804,8 @@ public class GameManager : MonoBehaviour
                     dialogue.instance.StartEffect();
                 }
             }
-            //我移動到書桌
-            else if (Name1.GetComponent<BlockFull>().CurrentText == "我" && Motion.GetComponent<BlockFull>().CurrentText == "移動到" && Name2.GetComponent<BlockFull>().CurrentText == "書桌")
+            //我移動到客廳
+            else if (Name1.GetComponent<BlockFull>().CurrentText == "我" && Motion.GetComponent<BlockFull>().CurrentText == "移動到" && Name2.GetComponent<BlockFull>().CurrentText == "客廳")
             {
                     string[] wordsText = { "我本來就在客廳裏面" };
                     dialogue.instance.words = wordsText;
