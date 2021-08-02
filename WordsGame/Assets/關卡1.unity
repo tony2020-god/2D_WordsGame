@@ -2143,8 +2143,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1625387313}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0.99920344, y: -0.44612855, z: 1.402212}
-  m_LocalScale: {x: 2.5951774, y: 1.852011, z: 1}
+  m_LocalPosition: {x: -0.9766, y: -0.44612855, z: 1.402212}
+  m_LocalScale: {x: 2.6008263, y: 1.852011, z: 1}
   m_Children: []
   m_Father: {fileID: 69973186}
   m_RootOrder: 0
@@ -2473,6 +2473,8 @@ MonoBehaviour:
   PlaySound: 0
   blackImage: {fileID: 1463424782}
   HaveSantance: 0
+  GameOverBool: 0
+  PassBool: 0
 --- !u!4 &1951143746
 Transform:
   m_ObjectHideFlags: 0
