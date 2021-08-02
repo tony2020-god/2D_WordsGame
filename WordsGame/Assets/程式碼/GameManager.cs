@@ -135,7 +135,7 @@ public class GameManager : MonoBehaviour
                     string[] wordsText = { "我一心只想移動到門，忘記我還在梯子上，就不小心摔死了..." };
                     dialogue.instance.words = wordsText;
                     dialogue.instance.StartEffect();
-                    aud.PlayOneShot(DeadSound, 5f);
+                    aud.PlayOneShot(DeadSound, 1f);
                     GameOver = true;
                 }
                 else
@@ -145,7 +145,7 @@ public class GameManager : MonoBehaviour
                         string[] wordsText = { "我移動到門前" };
                         dialogue.instance.words = wordsText;
                         dialogue.instance.StartEffect();
-                        aud.PlayOneShot(WalkSound,5f);
+                        aud.PlayOneShot(WalkSound,1f);
                         WhereIsMe = "門";
                     }
                     else
@@ -194,7 +194,7 @@ public class GameManager : MonoBehaviour
                         string[] wordsText = { "我嘗試開啟，但發現門是被反鎖的" };
                         dialogue.instance.words = wordsText;
                         dialogue.instance.StartEffect();
-                        aud.PlayOneShot(DoorLockSound, 5f);
+                        aud.PlayOneShot(DoorLockSound, 1f);
                     }
                     else
                     {
@@ -235,7 +235,7 @@ public class GameManager : MonoBehaviour
                         string[] wordsText = { "我尚未取得鑰匙" };
                         dialogue.instance.words = wordsText;
                         dialogue.instance.StartEffect();
-                        aud.PlayOneShot(DoorLockSound, 5f);
+                        aud.PlayOneShot(DoorLockSound, 1f);
                     }
                     else
                     {
@@ -244,7 +244,7 @@ public class GameManager : MonoBehaviour
                             string[] wordsText = { "我試著用鑰匙打開門門鎖，果然順利的解鎖了" };
                             dialogue.instance.words = wordsText;
                             dialogue.instance.StartEffect();
-                            aud.PlayOneShot(DoorLockSound, 5f);
+                            aud.PlayOneShot(DoorLockSound, 1f);
                             KeyOpenDoor = true;
                         }
                         else
@@ -332,11 +332,11 @@ public class GameManager : MonoBehaviour
                     string[] wordsText = { "當我移動到窗戶後，看到底下有人便向他求救，卻不幸被遠方的狙擊手射穿了腦袋...." };
                     dialogue.instance.words = wordsText;
                     dialogue.instance.StartEffect();
-                    aud.PlayOneShot(WalkSound, 5f);
+                    aud.PlayOneShot(WalkSound, 1f);
                     yield return new WaitForSeconds(2f);
-                    aud.PlayOneShot(FireSound, 5f);
+                    aud.PlayOneShot(FireSound, 1f);
                     yield return new WaitForSeconds(3f);
-                    aud.PlayOneShot(DeadSound, 5f);
+                    aud.PlayOneShot(DeadSound, 1f);
                     GameOver = true;
                 }           
             }
@@ -399,7 +399,7 @@ public class GameManager : MonoBehaviour
             {      
                 if(seekey == false)
                 {
-                    string[] wordsText = { "我抬頭看著天花板，櫃子上方似乎有個東西再發光…" };
+                    string[] wordsText = { "我抬頭看著天花板，櫃子上方似乎有個東西在發光…" };
                     dialogue.instance.words = wordsText;
                     dialogue.instance.StartEffect();
                 }
@@ -427,7 +427,7 @@ public class GameManager : MonoBehaviour
                         string[] wordsText = { "我打開了櫃子，裡面沒有任何衣服，但有個「梯子」" };
                         dialogue.instance.words = wordsText;
                         dialogue.instance.StartEffect();
-                        aud.PlayOneShot(OpenCabinetSound, 5f);
+                        aud.PlayOneShot(OpenCabinetSound, 1f);
                         if (getladder == false)
                         {
                             yield return new WaitForSeconds(4.4f);
@@ -464,13 +464,21 @@ public class GameManager : MonoBehaviour
                     }
                     else
                     {
-                        string[] wordsText = { "我拿起梯子，發現他和櫃子差不多高" };
-                        dialogue.instance.words = wordsText;
-                        dialogue.instance.StartEffect();
-                        aud.PlayOneShot(TakeLadderSound, 5f);
                         if (seeladder == false)
                         {
+                            string[] wordsText = { "我拿起梯子，放在一旁的空地，發現他和櫃子差不多高" };
+                            dialogue.instance.words = wordsText;
+                            dialogue.instance.StartEffect();
+                            aud.PlayOneShot(TakeLadderSound, 5f);
+                            WhereIsLadder = "空地";
+                            WhereIsMe = "空地";
                             seeladder = true;
+                        }
+                        else
+                        {
+                            string[] wordsText = { "這個梯子和櫃子差不多高" };
+                            dialogue.instance.words = wordsText;
+                            dialogue.instance.StartEffect();
                         }
                     }
                 }         
@@ -501,7 +509,7 @@ public class GameManager : MonoBehaviour
                                 string[] wordsText = { "我將拿在手上的梯子放在櫃子前，似乎可以「爬上」去" };
                                 dialogue.instance.words = wordsText;
                                 dialogue.instance.StartEffect();
-                                aud.PlayOneShot(TakeLadderSound, 5f);
+                                aud.PlayOneShot(TakeLadderSound, 1f);
                                 WhereIsLadder = "櫃子";
                                 WhereIsMe = "櫃子";
                                 if (getclimb == false)
@@ -526,9 +534,7 @@ public class GameManager : MonoBehaviour
                         string[] wordsText = { "梯子已經在櫃子旁邊" };
                         dialogue.instance.words = wordsText;
                         dialogue.instance.StartEffect();
-                    }
-                    
-                    
+                    }                
                 }
             }
             //梯子移動到門
@@ -557,7 +563,7 @@ public class GameManager : MonoBehaviour
                                 string[] wordsText = { "我將梯子移動到門前" };
                                 dialogue.instance.words = wordsText;
                                 dialogue.instance.StartEffect();
-                                aud.PlayOneShot(TakeLadderSound, 5f);
+                                aud.PlayOneShot(TakeLadderSound, 1f);
                                 WhereIsLadder = "門";
                                 WhereIsMe = "門";
                             }
@@ -608,7 +614,7 @@ public class GameManager : MonoBehaviour
                             string[] wordsText = { "我爬上梯子離天花板又更靠近了，櫃子上有個發光的「鑰匙」" };
                             dialogue.instance.words = wordsText;
                             dialogue.instance.StartEffect();
-                            aud.PlayOneShot(ClimbLadderSound, 5f);
+                            aud.PlayOneShot(ClimbLadderSound, 1f);
                             downladder = false;
                             if (getkey == false)
                             {
@@ -683,7 +689,7 @@ public class GameManager : MonoBehaviour
                     string[] wordsText = { "我慢慢地走下了梯子" };
                     dialogue.instance.words = wordsText;
                     dialogue.instance.StartEffect();
-                    aud.PlayOneShot(ClimbLadderSound, 5f);
+                    aud.PlayOneShot(ClimbLadderSound, 1f);
                     downladder = true;
                 }
                 else
@@ -724,28 +730,28 @@ public class GameManager : MonoBehaviour
             //我移動到梯子
             else if (Name1.GetComponent<BlockFull>().CurrentText == "我" && Motion.GetComponent<BlockFull>().CurrentText == "移動到" && Name2.GetComponent<BlockFull>().CurrentText == "梯子")
             {
-                if(seeladder == true)
-                {
-                    if (Neerladder == true)
+                    if (seeladder == true)
                     {
-                        string[] wordsText = { "我現在就在梯子旁邊" };
-                        dialogue.instance.words = wordsText;
-                        dialogue.instance.StartEffect();
+                        if (Neerladder == true)
+                        {
+                            string[] wordsText = { "我現在就在梯子旁邊" };
+                            dialogue.instance.words = wordsText;
+                            dialogue.instance.StartEffect();
+                        }
+                        else
+                        {
+                            string[] wordsText = { "我移動到" + WhereIsLadder + "前的梯子" };
+                            dialogue.instance.words = wordsText;
+                            dialogue.instance.StartEffect();
+                            WhereIsMe = WhereIsLadder;
+                        }
                     }
                     else
                     {
-                        string[] wordsText = { "我移動到" + WhereIsLadder + "前的梯子" };
+                        string[] wordsText = { "梯子還在櫃子裡面，我必須要先拿出來" };
                         dialogue.instance.words = wordsText;
                         dialogue.instance.StartEffect();
-                        WhereIsMe = WhereIsLadder;
-                    }
-                }
-                else
-                {
-                    string[] wordsText = { "梯子還在櫃子裡面，我必須要先拿出來" };
-                    dialogue.instance.words = wordsText;
-                    dialogue.instance.StartEffect();
-                }
+                    }                  
             }
             //其他可能
             else
@@ -827,7 +833,7 @@ public class GameManager : MonoBehaviour
                         string[] wordsText = { "我走到了書桌前" };
                         dialogue.instance.words = wordsText;
                         dialogue.instance.StartEffect();
-                        aud.PlayOneShot(WalkSound, 5f);
+                        aud.PlayOneShot(WalkSound, 1f);
                         WhereIsMe = "書桌";
                     }
                 }
@@ -937,7 +943,7 @@ public class GameManager : MonoBehaviour
                         string[] wordsText = { "我走到了沙發前" };
                         dialogue.instance.words = wordsText;
                         dialogue.instance.StartEffect();
-                        aud.PlayOneShot(WalkSound, 5f);
+                        aud.PlayOneShot(WalkSound, 1f);
                         WhereIsMe = WhereIsSofa;
                     }
                 }
@@ -1253,7 +1259,7 @@ public class GameManager : MonoBehaviour
                             string[] wordsText = { "我走到了鐵門前" };
                             dialogue.instance.words = wordsText;
                             dialogue.instance.StartEffect();
-                            aud.PlayOneShot(WalkSound, 5f);
+                            aud.PlayOneShot(WalkSound, 1f);
                             WhereIsMe = "鐵門";
                         }
                     }
@@ -1486,7 +1492,7 @@ public class GameManager : MonoBehaviour
                         string[] wordsText = { "我走到了大門前" };
                         dialogue.instance.words = wordsText;
                         dialogue.instance.StartEffect();
-                        aud.PlayOneShot(WalkSound, 5f);
+                        aud.PlayOneShot(WalkSound, 1f);
                         WhereIsMe = "大門";
                     }              
             }
@@ -1542,11 +1548,11 @@ public class GameManager : MonoBehaviour
                         string[] wordsText = { "我打開了大門，但是由於我沒有舉白旗，被遠方的狙擊手誤以為是喪屍而射殺了..." };
                         dialogue.instance.words = wordsText;
                         dialogue.instance.StartEffect();
-                        aud.PlayOneShot(OpenGateSound, 5f);
+                        aud.PlayOneShot(OpenGateSound, 1f);
                         yield return new WaitForSeconds(2f);
-                        aud.PlayOneShot(FireSound, 5f);
+                        aud.PlayOneShot(FireSound, 1f);
                         yield return new WaitForSeconds(3f);
-                        aud.PlayOneShot(DeadSound, 5f);
+                        aud.PlayOneShot(DeadSound, 1f);
                         GameOver = true;
                     }
                     else
