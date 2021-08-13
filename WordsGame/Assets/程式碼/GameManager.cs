@@ -1,7 +1,9 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
+using System;
 using UnityEngine.SceneManagement;
 using System.Collections;//引用系統集合、管理API(協同程式:非同步處理)
+using System.Collections.Generic; // 系統.集合.一般
 
 // UGUI拖動圖片,腳本掛在Image上即可
 public class GameManager : MonoBehaviour
@@ -19,13 +21,18 @@ public class GameManager : MonoBehaviour
     public GameObject MotioncardObject;
     [Header("卡片欄")]
     public Transform contentCard;
+    [Header("Leve1閱讀過的字")]
+    public static List<String> ReadWordsLevel1 = new List<String>();
+    [Header("Leve2閱讀過的字")]
+    public static List<String> ReadWordsLevel2 = new List<String>();
+
     public string WhereIsMe;
     public bool  GameOver = false;
     public bool pass = false;
     public static bool GameStart = false;
     public int FirstSantance = 0;
-
-
+    public bool StopDia;
+    
     #region 音效欄位
     public AudioSource aud;
     public AudioClip WalkSound;
@@ -127,6 +134,8 @@ public class GameManager : MonoBehaviour
     {
         if (Name1.GetComponent<BlockFull>().IfBlockfull == true && Motion.GetComponent<BlockFull>().IfBlockfull == true && Name2.GetComponent<BlockFull>().IfBlockfull == true)
         {
+            dialogue.instance.end = false;
+            dialogue.instance.strindex = 0;
             //我移動到門
             if (Name1.GetComponent<BlockFull>().CurrentText == "我" && Motion.GetComponent<BlockFull>().CurrentText == "移動到" && Name2.GetComponent<BlockFull>().CurrentText == "門")
             {
@@ -172,15 +181,15 @@ public class GameManager : MonoBehaviour
                     dialogue.instance.StartEffect();
                     if (getopen == false)
                     {
-                        yield return new WaitForSeconds(1.6f);
+                        getopen = true;
+                        yield return WaitForSecondsOrKeyPress(1.6f, true);
                         Transform temp1 = Instantiate(MotioncardObject, contentCard).transform;
                         temp1.Find("字").GetComponent<Text>().text = "下";
                         aud.PlayOneShot(GetCardSound);
-                        yield return new WaitForSeconds(8.2f);
+                        yield return WaitForSecondsOrKeyPress(8.2f, false);
                         Transform temp2 = Instantiate(MotioncardObject, contentCard).transform;
                         temp2.Find("字").GetComponent<Text>().text = "開啟";
-                        aud.PlayOneShot(GetCardSound);
-                        getopen = true;
+                        aud.PlayOneShot(GetCardSound);                       
                     }
                 }
             }
@@ -206,7 +215,7 @@ public class GameManager : MonoBehaviour
                             pass = true;
                             Level.IfFinishLevel1 = true;
                             aud.PlayOneShot(DoorOpenSound, 5f);
-                            yield return new WaitForSeconds(10f);
+                            yield return WaitForSecondsOrKeyPress(10f, false);
                             SceneManager.LoadScene("選單");
                         }
                         else
@@ -223,7 +232,6 @@ public class GameManager : MonoBehaviour
                     dialogue.instance.words = wordsText;
                     dialogue.instance.StartEffect();
                 }
-
             }
             //鑰匙開啟門
             else if (Name1.GetComponent<BlockFull>().CurrentText == "鑰匙" && Motion.GetComponent<BlockFull>().CurrentText == "開啟" && Name2.GetComponent<BlockFull>().CurrentText == "門")
@@ -241,11 +249,11 @@ public class GameManager : MonoBehaviour
                     {
                         if (WhereIsLadder != "門")
                         {
+                            KeyOpenDoor = true;
                             string[] wordsText = { "我試著用鑰匙打開門門鎖，果然順利的解鎖了" };
                             dialogue.instance.words = wordsText;
                             dialogue.instance.StartEffect();
-                            aud.PlayOneShot(DoorLockSound, 1f);
-                            KeyOpenDoor = true;
+                            aud.PlayOneShot(DoorLockSound, 1f);                     
                         }
                         else
                         {
@@ -261,7 +269,6 @@ public class GameManager : MonoBehaviour
                     dialogue.instance.words = wordsText;
                     dialogue.instance.StartEffect();
                 }
-
             }
             //我檢視房間
             else if (Name1.GetComponent<BlockFull>().CurrentText == "我" && Motion.GetComponent<BlockFull>().CurrentText == "檢視" && Name2.GetComponent<BlockFull>().CurrentText == "房間")
@@ -271,15 +278,15 @@ public class GameManager : MonoBehaviour
                 dialogue.instance.StartEffect();
                 if (getroom == false)
                 {
-                    yield return new WaitForSeconds(4f);
+                    getroom = true;
+                    yield return WaitForSecondsOrKeyPress(4f, true);
                     Transform temp2 = Instantiate(NamecardObject, contentCard).transform;
                     temp2.Find("字").GetComponent<Text>().text = "櫃子";
                     aud.PlayOneShot(GetCardSound);
-                    yield return new WaitForSeconds(3.2f);
+                    yield return WaitForSecondsOrKeyPress(3.2f, false);
                     Transform temp3 = Instantiate(NamecardObject, contentCard).transform;
                     temp3.Find("字").GetComponent<Text>().text = "窗戶";
-                    aud.PlayOneShot(GetCardSound);
-                    getroom = true;
+                    aud.PlayOneShot(GetCardSound);                    
                 }
             }
             //我移動到櫃子
@@ -333,9 +340,9 @@ public class GameManager : MonoBehaviour
                     dialogue.instance.words = wordsText;
                     dialogue.instance.StartEffect();
                     aud.PlayOneShot(WalkSound, 1f);
-                    yield return new WaitForSeconds(2f);
+                    yield return WaitForSecondsOrKeyPress(2f, true);
                     aud.PlayOneShot(FireSound, 1f);
-                    yield return new WaitForSeconds(3f);
+                    yield return WaitForSecondsOrKeyPress(3f, false);
                     aud.PlayOneShot(DeadSound, 1f);
                     GameOver = true;
                 }           
@@ -385,11 +392,11 @@ public class GameManager : MonoBehaviour
                         dialogue.instance.StartEffect();
                         if (getceiling == false)
                         {
-                            yield return new WaitForSeconds(4.2f);
+                            getceiling = true;
+                            yield return WaitForSecondsOrKeyPress(4.2f, false);
                             Transform temp1 = Instantiate(NamecardObject, contentCard).transform;
                             temp1.Find("字").GetComponent<Text>().text = "天花板";
                             aud.PlayOneShot(GetCardSound);
-                            getceiling = true;
                         }
                     }
                 }           
@@ -408,8 +415,7 @@ public class GameManager : MonoBehaviour
                     string[] wordsText = { "天花板似乎沒甚麼東西了" };
                     dialogue.instance.words = wordsText;
                     dialogue.instance.StartEffect();
-                }
-        
+                } 
             }
             //我開啟櫃子
             else if (Name1.GetComponent<BlockFull>().CurrentText == "我" && Motion.GetComponent<BlockFull>().CurrentText == "開啟" && Name2.GetComponent<BlockFull>().CurrentText == "櫃子")
@@ -422,19 +428,29 @@ public class GameManager : MonoBehaviour
                 }
                 else
                 {
+                    
                     if (OpenCabinet == false)
                     {
-                        string[] wordsText = { "我打開了櫃子，裡面沒有任何衣服，但有個「梯子」" };
-                        dialogue.instance.words = wordsText;
-                        dialogue.instance.StartEffect();
-                        aud.PlayOneShot(OpenCabinetSound, 1f);
-                        if (getladder == false)
+                        if(WhereIsMe == "櫃子")
                         {
-                            yield return new WaitForSeconds(4.4f);
-                            Transform temp1 = Instantiate(NamecardObject, contentCard).transform;
-                            temp1.Find("字").GetComponent<Text>().text = "梯子";
-                            aud.PlayOneShot(GetCardSound);
-                            getladder = true;
+                            string[] wordsText = { "我打開了櫃子，裡面沒有任何衣服，但有個「梯子」" };
+                            dialogue.instance.words = wordsText;
+                            dialogue.instance.StartEffect();
+                            aud.PlayOneShot(OpenCabinetSound, 1f);
+                            if (getladder == false)
+                            {
+                                getladder = true;
+                                yield return WaitForSecondsOrKeyPress(4.4f, false);
+                                Transform temp1 = Instantiate(NamecardObject, contentCard).transform;
+                                temp1.Find("字").GetComponent<Text>().text = "梯子";
+                                aud.PlayOneShot(GetCardSound);
+                            }
+                        }
+                        else
+                        {
+                            string[] wordsText = { "我離櫃子太遠開啟不了" };
+                            dialogue.instance.words = wordsText;
+                            dialogue.instance.StartEffect();
                         }
                     }
                     else
@@ -465,14 +481,14 @@ public class GameManager : MonoBehaviour
                     else
                     {
                         if (seeladder == false)
-                        {
+                        {                           
+                            seeladder = true;
                             string[] wordsText = { "我拿起梯子，放在一旁的空地，發現他和櫃子差不多高" };
                             dialogue.instance.words = wordsText;
                             dialogue.instance.StartEffect();
                             aud.PlayOneShot(TakeLadderSound, 5f);
                             WhereIsLadder = "空地";
                             WhereIsMe = "空地";
-                            seeladder = true;
                         }
                         else
                         {
@@ -514,7 +530,7 @@ public class GameManager : MonoBehaviour
                                 WhereIsMe = "櫃子";
                                 if (getclimb == false)
                                 {
-                                    yield return new WaitForSeconds(4.4f);
+                                    yield return WaitForSecondsOrKeyPress(4.4f, false);
                                     Transform temp1 = Instantiate(MotioncardObject, contentCard).transform;
                                     temp1.Find("字").GetComponent<Text>().text = "爬上";
                                     aud.PlayOneShot(GetCardSound);
@@ -527,7 +543,7 @@ public class GameManager : MonoBehaviour
                                 dialogue.instance.words = wordsText;
                                 dialogue.instance.StartEffect();
                             }
-                           }                                                                                                                       
+                          }                                                                                                                       
                      }
                     else
                     {
@@ -618,7 +634,7 @@ public class GameManager : MonoBehaviour
                             downladder = false;
                             if (getkey == false)
                             {
-                                yield return new WaitForSeconds(5.2f);
+                                yield return WaitForSecondsOrKeyPress(5.2f, false);
                                 Transform temp1 = Instantiate(NamecardObject, contentCard).transform;
                                 temp1.Find("字").GetComponent<Text>().text = "鑰匙";
                                 aud.PlayOneShot(GetCardSound);
@@ -627,10 +643,10 @@ public class GameManager : MonoBehaviour
                         }
                         else
                         {
+                            downladder = false;
                             string[] wordsText = { "爬上梯子後並未發現甚麼東西" };
                             dialogue.instance.words = wordsText;
                             dialogue.instance.StartEffect();
-                            downladder = false;
                         }                     
                     }                   
                 }              
@@ -649,8 +665,7 @@ public class GameManager : MonoBehaviour
                     string[] wordsText = { "櫃子太高了爬不上去" };
                     dialogue.instance.words = wordsText;
                     dialogue.instance.StartEffect();
-                }
-        
+                } 
             }
             //我檢視鑰匙
             else if (Name1.GetComponent<BlockFull>().CurrentText == "我" && Motion.GetComponent<BlockFull>().CurrentText == "檢視" && Name2.GetComponent<BlockFull>().CurrentText == "鑰匙")
@@ -685,12 +700,12 @@ public class GameManager : MonoBehaviour
             else if (Name1.GetComponent<BlockFull>().CurrentText == "我" && Motion.GetComponent<BlockFull>().CurrentText == "下" && Name2.GetComponent<BlockFull>().CurrentText == "梯子")
             {
                 if (downladder == false)
-                {
+                {        
+                    downladder = true;
                     string[] wordsText = { "我慢慢地走下了梯子" };
                     dialogue.instance.words = wordsText;
                     dialogue.instance.StartEffect();
                     aud.PlayOneShot(ClimbLadderSound, 1f);
-                    downladder = true;
                 }
                 else
                 {
@@ -771,31 +786,33 @@ public class GameManager : MonoBehaviour
     {
         if (Name1.GetComponent<BlockFull>().IfBlockfull == true && Motion.GetComponent<BlockFull>().IfBlockfull == true && Name2.GetComponent<BlockFull>().IfBlockfull == true)
         {
+            dialogue.instance.end = false;
+            dialogue.instance.strindex = 0;
             //我檢視客廳
             if (Name1.GetComponent<BlockFull>().CurrentText == "我" && Motion.GetComponent<BlockFull>().CurrentText == "檢視" && Name2.GetComponent<BlockFull>().CurrentText == "客廳")
             {
                 if (SeeLivingRoom == false)
                 {
+                    SeeLivingRoom = true;
                     string[] wordsText = { "客廳中只看到「書桌」、「沙發」和沙發後的一扇[鐵門]，雖然有些距離，但我可以「移動到」這些地方" };
                     dialogue.instance.words = wordsText;
                     dialogue.instance.StartEffect();
-                    yield return new WaitForSeconds(1.8f);
+                    yield return WaitForSecondsOrKeyPress(1.8f, true);
                     Transform temp1 = Instantiate(NamecardObject, contentCard).transform;
                     temp1.Find("字").GetComponent<Text>().text = "書桌";
                     aud.PlayOneShot(GetCardSound);
-                    yield return new WaitForSeconds(1f);
+                    yield return WaitForSecondsOrKeyPress(1f, true);
                     Transform temp2 = Instantiate(NamecardObject, contentCard).transform;
                     temp2.Find("字").GetComponent<Text>().text = "沙發";
                     aud.PlayOneShot(GetCardSound);
-                    yield return new WaitForSeconds(2.2f);
+                    yield return WaitForSecondsOrKeyPress(2.2f, true);
                     Transform temp3 = Instantiate(NamecardObject, contentCard).transform;
                     temp3.Find("字").GetComponent<Text>().text = "鐵門";
                     aud.PlayOneShot(GetCardSound);
-                    yield return new WaitForSeconds(3.4f);
+                    yield return WaitForSecondsOrKeyPress(3.4f, false);
                     Transform temp4 = Instantiate(MotioncardObject, contentCard).transform;
                     temp4.Find("字").GetComponent<Text>().text = "移動到";
                     aud.PlayOneShot(GetCardSound);
-                    SeeLivingRoom = true;
                 }
                 else
                 {
@@ -847,16 +864,16 @@ public class GameManager : MonoBehaviour
                     dialogue.instance.words = wordsText;
                     dialogue.instance.StartEffect();
                     if (SeeDesk == false)
-                    {
-                        yield return new WaitForSeconds(1.8f);
+                    {         
+                        SeeDesk = true;
+                        yield return WaitForSecondsOrKeyPress(1.8f, true);
                         Transform temp1 = Instantiate(NamecardObject, contentCard).transform;
                         temp1.Find("字").GetComponent<Text>().text = "抽屜";
                         aud.PlayOneShot(GetCardSound);
-                        yield return new WaitForSeconds(2.8f);
+                        yield return WaitForSecondsOrKeyPress(2.8f, false);
                         Transform temp2 = Instantiate(NamecardObject, contentCard).transform;
                         temp2.Find("字").GetComponent<Text>().text = "報紙";
                         aud.PlayOneShot(GetCardSound);
-                        SeeDesk = true;
                     }
                 }
                 else
@@ -876,11 +893,11 @@ public class GameManager : MonoBehaviour
                     dialogue.instance.StartEffect();
                     if (SeeDrawer == false)
                     {
-                        yield return new WaitForSeconds(2f);
+                        SeeDrawer = true;
+                        yield return WaitForSecondsOrKeyPress(2f, false);
                         Transform temp1 = Instantiate(MotioncardObject, contentCard).transform;
                         temp1.Find("字").GetComponent<Text>().text = "開啟";
                         aud.PlayOneShot(GetCardSound);
-                        SeeDrawer = true;
                     }
                 }
                 else
@@ -897,15 +914,15 @@ public class GameManager : MonoBehaviour
                 {
                     if (OpenDrawer == false)
                     {
+                        OpenDrawer = true;
                         string[] wordsText = { "抽屜裡只有一面「白旗」" };
                         dialogue.instance.words = wordsText;
                         dialogue.instance.StartEffect();
                         aud.PlayOneShot(OpenDrawerSound);
-                        yield return new WaitForSeconds(2f);
+                        yield return WaitForSecondsOrKeyPress(2f, false);
                         Transform temp1 = Instantiate(NamecardObject, contentCard).transform;
                         temp1.Find("字").GetComponent<Text>().text = "白旗";
                         aud.PlayOneShot(GetCardSound);
-                        OpenDrawer = true;
                     }
                     else
                     {
@@ -960,11 +977,11 @@ public class GameManager : MonoBehaviour
                         dialogue.instance.StartEffect();
                         if (SeeSofa == false)
                         {
-                            yield return new WaitForSeconds(3.2f);
+                            SeeSofa = true;
+                            yield return WaitForSecondsOrKeyPress(3.2f, false);
                             Transform temp1 = Instantiate(NamecardObject, contentCard).transform;
                             temp1.Find("字").GetComponent<Text>().text = "手槍";
                             aud.PlayOneShot(GetCardSound);
-                            SeeSofa = true;
                         }
                     }
                     else
@@ -997,10 +1014,10 @@ public class GameManager : MonoBehaviour
                 {
                     if (WhereIsMe == "書桌")
                     {
+                        GetWhiteFlag = true;
                         string[] wordsText = { "有點髒掉的白旗看上去有點奇怪，但以防萬一我還是塞進了口袋" };
                         dialogue.instance.words = wordsText;
                         dialogue.instance.StartEffect();
-                        GetWhiteFlag = true;
                     }
                     else
                     {
@@ -1015,7 +1032,6 @@ public class GameManager : MonoBehaviour
                     dialogue.instance.words = wordsText;
                     dialogue.instance.StartEffect();
                 }
-
             }
             //我檢視報紙
             else if (Name1.GetComponent<BlockFull>().CurrentText == "我" && Motion.GetComponent<BlockFull>().CurrentText == "檢視" && Name2.GetComponent<BlockFull>().CurrentText == "報紙")
@@ -1040,10 +1056,10 @@ public class GameManager : MonoBehaviour
                 {
                     if (NeerSofa ==true)
                     {
+                        GetGun = true;
                         string[] wordsText = { "我拿起了手槍以備不時之需，裡面還剩3發子彈" };
                         dialogue.instance.words = wordsText;
                         dialogue.instance.StartEffect();
-                        GetGun = true;
                     }
                     else
                     {
@@ -1080,11 +1096,11 @@ public class GameManager : MonoBehaviour
                         WhereIsMe = "書桌";
                         if (GetCarpet == false)
                         {
-                            yield return new WaitForSeconds(4.4f);
+                            GetCarpet = true;
+                            yield return WaitForSecondsOrKeyPress(4.4f, false);
                             Transform temp1 = Instantiate(NamecardObject, contentCard).transform;
                             temp1.Find("字").GetComponent<Text>().text = "地毯";
                             aud.PlayOneShot(GetCardSound);
-                            GetCarpet = true;
                         }
                     }
                 }
@@ -1201,19 +1217,19 @@ public class GameManager : MonoBehaviour
                     dialogue.instance.StartEffect();
                     if (SeeCarpet == false)
                     {
-                        yield return new WaitForSeconds(7.2f);
+                        SeeCarpet = true;
+                        yield return WaitForSecondsOrKeyPress(7.2f, true);
                         Transform temp1 = Instantiate(NamecardObject, contentCard).transform;
                         temp1.Find("字").GetComponent<Text>().text = "喪屍";
                         aud.PlayOneShot(GetCardSound);
-                        yield return new WaitForSeconds(2f);
+                        yield return WaitForSecondsOrKeyPress(2f, true);
                         Transform temp2 = Instantiate(MotioncardObject, contentCard).transform;
                         temp2.Find("字").GetComponent<Text>().text = "舉起";
                         aud.PlayOneShot(GetCardSound);
-                        yield return new WaitForSeconds(4.2f);
+                        yield return WaitForSecondsOrKeyPress(4.2f, false);
                         Transform temp3 = Instantiate(MotioncardObject, contentCard).transform;
                         temp3.Find("字").GetComponent<Text>().text = "殺死";
                         aud.PlayOneShot(GetCardSound);
-                        SeeCarpet = true;
                     }
                 }
                 else if (WhereIsMe == "鐵門" && WhereIsSofa == "鐵門")
@@ -1309,11 +1325,11 @@ public class GameManager : MonoBehaviour
                         dialogue.instance.words = wordsText;
                         dialogue.instance.StartEffect();
                         aud.PlayOneShot(OpenIronDoorSound);
-                        yield return new WaitForSeconds(3.8f);
+                        yield return WaitForSecondsOrKeyPress(3.8f, true);
                         aud.PlayOneShot(ZombeRunShutSound);
                         defenceText.SetActive(true);
                         defenceText.GetComponent<Text>().text = "離被喪屍抓到還有 " + time + " 秒";
-                        yield return new WaitForSeconds(2.2f);
+                        yield return WaitForSecondsOrKeyPress(2.2f, false);
                         OpenIronDoor = true;
                     }
                 }
@@ -1343,10 +1359,11 @@ public class GameManager : MonoBehaviour
                     }
                     else
                     {
+                        RaiseGun = true;
                         string[] wordsText = { "我舉起了手槍" };
                         dialogue.instance.words = wordsText;
                         dialogue.instance.StartEffect();
-                        RaiseGun = true;
+
                     }
                 }             
             }
@@ -1377,9 +1394,9 @@ public class GameManager : MonoBehaviour
                             aud.PlayOneShot(FireSound);
                             IfAttack = true;
                             defenceText.SetActive(false);
-                            yield return new WaitForSeconds(1f);
+                            yield return WaitForSecondsOrKeyPress(1f, true);
                             aud.PlayOneShot(DeadSound);
-                            yield return new WaitForSeconds(8.8f);
+                            yield return WaitForSecondsOrKeyPress(8.8f, false);
                             Transform temp1 = Instantiate(NamecardObject, contentCard).transform;
                             temp1.Find("字").GetComponent<Text>().text = "地圖";
                             aud.PlayOneShot(GetCardSound);
@@ -1416,7 +1433,7 @@ public class GameManager : MonoBehaviour
                         dialogue.instance.words = wordsText;
                         dialogue.instance.StartEffect();              
                         aud.PlayOneShot(FireSound);
-                        yield return new WaitForSeconds(1f);
+                        yield return WaitForSecondsOrKeyPress(1f, false);
                         aud.PlayOneShot(DeadSound);
                         GameOver = true;
                     }
@@ -1471,11 +1488,11 @@ public class GameManager : MonoBehaviour
                 dialogue.instance.StartEffect();
                 if(GetGate == false)
                 {
-                    yield return new WaitForSeconds(4.6f);
+                    GetGate = true;
+                    yield return WaitForSecondsOrKeyPress(4.6f, false);
                     Transform temp1 = Instantiate(NamecardObject, contentCard).transform;
                     temp1.Find("字").GetComponent<Text>().text = "大門";
                     aud.PlayOneShot(GetCardSound);
-                    GetGate = true;
                 }           
             }
             //我移動到大門
@@ -1515,10 +1532,10 @@ public class GameManager : MonoBehaviour
                     }
                     else
                     {
+                        RaiseWhiteFlag = true;
                         string[] wordsText = { "我舉起白旗" };
                         dialogue.instance.words = wordsText;
                         dialogue.instance.StartEffect();
-                        RaiseWhiteFlag = true;
                     }
                 }  
             }
@@ -1549,9 +1566,9 @@ public class GameManager : MonoBehaviour
                         dialogue.instance.words = wordsText;
                         dialogue.instance.StartEffect();
                         aud.PlayOneShot(OpenGateSound, 1f);
-                        yield return new WaitForSeconds(2f);
+                        yield return WaitForSecondsOrKeyPress(2f, true);
                         aud.PlayOneShot(FireSound, 1f);
-                        yield return new WaitForSeconds(3f);
+                        yield return WaitForSecondsOrKeyPress(3f, false);
                         aud.PlayOneShot(DeadSound, 1f);
                         GameOver = true;
                     }
@@ -1563,7 +1580,7 @@ public class GameManager : MonoBehaviour
                         pass = true;
                         Level.IfFinishLevel2 = true;
                         aud.PlayOneShot(OpenGateSound, 5f);
-                        yield return new WaitForSeconds(10f);
+                        yield return WaitForSecondsOrKeyPress(10f, false);
                         SceneManager.LoadScene("選單");
                     }
                 }
@@ -1604,68 +1621,59 @@ public class GameManager : MonoBehaviour
         {     
             if (FirstSantance == 1)
             {
-                yield return new WaitForSeconds(0.4f);
+                yield return WaitForSecondsOrKeyPress(0.4f, true);
                 Transform temp1 = Instantiate(NamecardObject, contentCard).transform;
                 temp1.Find("字").GetComponent<Text>().text = "我";
                 aud.PlayOneShot(GetCardSound);
-                yield return new WaitForSeconds(0.8f);
+                yield return WaitForSecondsOrKeyPress(0.8f,true);
                 Transform temp2 = Instantiate(NamecardObject, contentCard).transform;
                 temp2.Find("字").GetComponent<Text>().text = "床";
                 aud.PlayOneShot(GetCardSound);
-                yield return new WaitForSeconds(3.2f);
+                yield return WaitForSecondsOrKeyPress(3.2f, true);
                 Transform temp3 = Instantiate(MotioncardObject, contentCard).transform;
                 temp3.Find("字").GetComponent<Text>().text = "移動到";
                 aud.PlayOneShot(GetCardSound);
-                yield return new WaitForSeconds(0.6f);
+                yield return WaitForSecondsOrKeyPress(0.6f, false);
                 Transform temp4 = Instantiate(NamecardObject, contentCard).transform;
                 temp4.Find("字").GetComponent<Text>().text = "房間";
                 aud.PlayOneShot(GetCardSound);
             }
             else if (FirstSantance == 2)
             {
-                yield return new WaitForSeconds(1.4f);
+                yield return WaitForSecondsOrKeyPress(0.6f, false);
                 Transform temp1 = Instantiate(NamecardObject, contentCard).transform;
                 temp1.Find("字").GetComponent<Text>().text = "門";
                 aud.PlayOneShot(GetCardSound);
             }
             else if (FirstSantance == 3)
             {
-                yield return new WaitForSeconds(1.6f);
+                yield return WaitForSecondsOrKeyPress(1.6f, false);
                 Transform temp1 = Instantiate(MotioncardObject, contentCard).transform;
                 temp1.Find("字").GetComponent<Text>().text = "檢視";
                 aud.PlayOneShot(GetCardSound);
             }
         }
+
         //第二關 一開始文字字卡
         if (Level.WhichLevel == 2)
         {
             if (FirstSantance == 1)
             {
-                yield return new WaitForSeconds(0.4f);
+                yield return WaitForSecondsOrKeyPress(0.4f, true);
                 Transform temp1 = Instantiate(NamecardObject, contentCard).transform;
                 temp1.Find("字").GetComponent<Text>().text = "我";
                 aud.PlayOneShot(GetCardSound);
-                yield return new WaitForSeconds(4f);
+                yield return WaitForSecondsOrKeyPress(4f, false);
                 Transform temp2 = Instantiate(NamecardObject, contentCard).transform;
                 temp2.Find("字").GetComponent<Text>().text = "客廳";
                 aud.PlayOneShot(GetCardSound);
-                yield return new WaitForSeconds(2.2f);
-                Transform temp3 = Instantiate(MotioncardObject, contentCard).transform;
-                temp3.Find("字").GetComponent<Text>().text = "檢視";
-                aud.PlayOneShot(GetCardSound);
+
             }
             else if (FirstSantance == 2)
             {
-                yield return new WaitForSeconds(1.4f);
-                Transform temp1 = Instantiate(NamecardObject, contentCard).transform;
-                temp1.Find("字").GetComponent<Text>().text = "門";
-                aud.PlayOneShot(GetCardSound);
-            }
-            else if (FirstSantance == 3)
-            {
-                yield return new WaitForSeconds(1.6f);
-                Transform temp1 = Instantiate(MotioncardObject, contentCard).transform;
-                temp1.Find("字").GetComponent<Text>().text = "檢視";
+                yield return WaitForSecondsOrKeyPress(1.8f, false);
+                Transform temp3 = Instantiate(MotioncardObject, contentCard).transform;
+                temp3.Find("字").GetComponent<Text>().text = "檢視";
                 aud.PlayOneShot(GetCardSound);
             }
         }
@@ -1719,6 +1727,24 @@ public class GameManager : MonoBehaviour
             {
                 NeerSofa = false;
             }
+        }
+    }
+
+
+    public IEnumerator WaitForSecondsOrKeyPress(float time, bool HaveOtherCard)  //自定 WaitForSecondsOrKeyPress (時間，是否還有字卡)
+    {  
+        while(StopDia == false && time > 0) 
+         {
+            time -= Time.deltaTime;                                        //倒數計時
+            yield return new WaitForSeconds(0.0001f);                      //每楨執行一次
+            if (StopDia == true)                                           //滑鼠傳回的StopDia為true，time設為0
+             {
+                time = 0;
+             }
+         }
+        if (HaveOtherCard == false)
+        {
+            StopDia = false;
         }
     }
 }

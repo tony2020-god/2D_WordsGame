@@ -16,13 +16,13 @@ public class MoveWithMouse : MonoBehaviour, IDragHandler, IBeginDragHandler, IEn
     public string CardWords;
     Vector3 originTraslate;
     public GameManager GM;
+    public GameObject CardBox;
 
     public void Start()
     {
-        GM = GameObject.Find("遊戲管理器").GetComponent<GameManager>();
-        
+        GM = GameObject.Find("遊戲管理器").GetComponent<GameManager>();  
         CardWords = gameObject.transform.Find("字").GetComponent<Text>().text;
-        print(CardWords);
+        CardBox = GameObject.Find("玩家選字欄位");
     }
     /// <summary>
     /// 開始拖拽的時候
@@ -62,7 +62,8 @@ public class MoveWithMouse : MonoBehaviour, IDragHandler, IBeginDragHandler, IEn
             }
             else
             {
-                if (Block.GetComponent<BlockFull>().IfBlockfull == false && inblock == true)
+                //欄位沒東西並且有觸碰到
+                if (Block.GetComponent<BlockFull>().IfBlockfull == false && inblock == true && Block != LastBlock)
                 {
                     gameObject.transform.parent = Block.transform;
                     if(LastBlock != null)
@@ -75,11 +76,39 @@ public class MoveWithMouse : MonoBehaviour, IDragHandler, IBeginDragHandler, IEn
                     LastBlock = Block;
                     Block.GetComponent<BlockFull>().IfBlockfull = true;
                     Block.GetComponent<BlockFull>().CurrentText = CardWords;
+                    Block.GetComponent<BlockFull>().CurrentCard = gameObject;
                     StartinCardBox = false;
                     if (Level.WhichLevel == 0) GM.InMenu();
                     else if(Level.WhichLevel == 1) StartCoroutine(GM.Level1());
                     else if(Level.WhichLevel == 2) StartCoroutine(GM.Level2());
-                    print(Level.WhichLevel);
+                }
+                //欄位有東西並且有觸碰到
+                else if (Block.GetComponent<BlockFull>().IfBlockfull == true && inblock == true && Block != LastBlock)
+                {
+                    //上一個欄位不是空值和放字卡欄位
+                    if (LastBlock != null && LastBlock != CardBox)
+                    {
+                        Block.GetComponent<BlockFull>().CurrentCard.transform.parent = LastBlock.transform;
+                        Block.GetComponent<BlockFull>().CurrentCard.GetComponent<MoveWithMouse>().LastBlock = LastBlock;
+                        LastBlock.GetComponent<BlockFull>().CurrentCard = Block.GetComponent<BlockFull>().CurrentCard;
+                        LastBlock.GetComponent<BlockFull>().CurrentCard = Block.GetComponent<BlockFull>().CurrentCard;
+                        LastBlock.GetComponent<BlockFull>().CurrentText = Block.GetComponent<BlockFull>().CurrentText;
+                        print(CardWords + LastBlock.name);
+                    }
+                    else
+                    {
+                        Block.GetComponent<BlockFull>().CurrentCard.transform.parent = CardBox.transform;
+                        Block.GetComponent<BlockFull>().CurrentCard.GetComponent<MoveWithMouse>().LastBlock = CardBox;
+                    }
+                    Block.GetComponent<BlockFull>().IfBlockfull = true;
+                    Block.GetComponent<BlockFull>().CurrentText = CardWords;
+                    gameObject.transform.parent = Block.transform;
+                    LastBlock = Block;
+                    Block.GetComponent<BlockFull>().CurrentCard = gameObject;
+                    StartinCardBox = false;
+                    if (Level.WhichLevel == 0) GM.InMenu();
+                    else if (Level.WhichLevel == 1) StartCoroutine(GM.Level1());
+                    else if (Level.WhichLevel == 2) StartCoroutine(GM.Level2());
                 }
                 else
                 {
