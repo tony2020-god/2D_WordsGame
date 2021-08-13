@@ -79,8 +79,14 @@ public class dialogue : MonoBehaviour
                 end = true;
                 GameManager.instance.StopDia = true;
                 AlreadyRead = false;
+
                 if (strindex < words.Length - 1) triangle.SetActive(true);
-                else triangle.SetActive(false);
+                else
+                {
+                    triangle.SetActive(false);
+                    GameManager.instance.FirstSantance = 100;
+                }
+                if (GameManager.instance.FirstSantance == 100 && GameManager.instance.GameOver == false && GameManager.instance.pass == false) imageCover();
             }
             else if (end == true)
             {
@@ -122,12 +128,19 @@ public class dialogue : MonoBehaviour
     {
         if (isActive == true)
         {
+            //判斷有無閱讀過
             if (Level.WhichLevel == 1 && GameManager.ReadWordsLevel1.Contains(words[0]) == true)
             {
                 AlreadyRead = true;
                 triangle.SetActive(true);
             }
-            if(AlreadyReadFirstWord == true && GameManager.instance.FirstSantance <= CountSantance - 1) triangle.SetActive(true);
+            if (Level.WhichLevel == 2 && GameManager.ReadWordsLevel2.Contains(words[0]) == true)
+            {
+                AlreadyRead = true;
+                triangle.SetActive(true);
+            }
+
+            if (AlreadyReadFirstWord == true && GameManager.instance.FirstSantance <= CountSantance - 1) triangle.SetActive(true);
             HaveSantance = false;
             timer += Time.deltaTime;
             if (timer >= charsPerSecond) //判断計時器時間是否到達
@@ -142,12 +155,17 @@ public class dialogue : MonoBehaviour
                         PlaySound = true;
                     }
                     myText.text = words[strindex].Substring(0, currentPos); //刷新文本顯示内容
-                    if (currentPos >= words[strindex].Length)
+                    if (currentPos >= words[strindex].Length) //如果這句已經結束
                     {
                         end = true;
                         aud.Stop();
                         if (strindex < words.Length - 1) triangle.SetActive(true);
-                        else triangle.SetActive(false);
+                        else
+                        {
+                            triangle.SetActive(false);
+                            GameManager.instance.FirstSantance = 100;
+                        }
+                        if (GameManager.instance.FirstSantance == 100 && GameManager.instance.GameOver == false && GameManager.instance.pass == false) imageCover();
                     }
                 }           
             }
@@ -159,7 +177,6 @@ public class dialogue : MonoBehaviour
     {
         isActive = false;
         aud.Stop();
-        GameManager.instance.FirstSantance = 100;
         PlaySound = false;
         HaveSantance = false;
         timer = 0;
@@ -173,9 +190,13 @@ public class dialogue : MonoBehaviour
             if (Level.WhichLevel == 1 && GameManager.ReadWordsLevel1.Contains(words[0]) == false)
             {
                 GameManager.ReadWordsLevel1.Add(words[0]);
-            }          
+            }
+            if (Level.WhichLevel == 2 && GameManager.ReadWordsLevel2.Contains(words[0]) == false)
+            {
+                GameManager.ReadWordsLevel2.Add(words[0]);
+            }
         }
-        imageCover();
+        if (GameManager.instance.FirstSantance == 100 && GameManager.instance.GameOver == false && GameManager.instance.pass == false) imageCover();
         if (GameManager.instance.GameOver == true) GameOverBool = true;
         if (GameManager.instance.pass == true) PassBool = true;
     }

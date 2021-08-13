@@ -141,11 +141,11 @@ public class GameManager : MonoBehaviour
             {
                 if(downladder == false)
                 {
+                    GameOver = true;
                     string[] wordsText = { "我一心只想移動到門，忘記我還在梯子上，就不小心摔死了..." };
                     dialogue.instance.words = wordsText;
                     dialogue.instance.StartEffect();
                     aud.PlayOneShot(DeadSound, 1f);
-                    GameOver = true;
                 }
                 else
                 {
@@ -328,14 +328,15 @@ public class GameManager : MonoBehaviour
             {
                 if (downladder == false)
                 {
+                    GameOver = true;
                     string[] wordsText = { "我一心只想移動到門，忘記我還在梯子上，就不小心摔死了..." };
                     dialogue.instance.words = wordsText;
                     dialogue.instance.StartEffect();
-                    aud.PlayOneShot(DeadSound, 5f);
-                    GameOver = true;
+                    aud.PlayOneShot(DeadSound, 5f);               
                 }
                 else
                 {
+                    GameOver = true;
                     string[] wordsText = { "當我移動到窗戶後，看到底下有人便向他求救，卻不幸被遠方的狙擊手射穿了腦袋...." };
                     dialogue.instance.words = wordsText;
                     dialogue.instance.StartEffect();
@@ -343,8 +344,7 @@ public class GameManager : MonoBehaviour
                     yield return WaitForSecondsOrKeyPress(2f, true);
                     aud.PlayOneShot(FireSound, 1f);
                     yield return WaitForSecondsOrKeyPress(3f, false);
-                    aud.PlayOneShot(DeadSound, 1f);
-                    GameOver = true;
+                    aud.PlayOneShot(DeadSound, 1f);                
                 }           
             }
             //我檢視窗戶
@@ -419,16 +419,7 @@ public class GameManager : MonoBehaviour
             }
             //我開啟櫃子
             else if (Name1.GetComponent<BlockFull>().CurrentText == "我" && Motion.GetComponent<BlockFull>().CurrentText == "開啟" && Name2.GetComponent<BlockFull>().CurrentText == "櫃子")
-            {
-                if (downladder == false)
-                {
-                    string[] wordsText = { "我懶得下梯子，想直接把櫃子打開，不料腳滑，我就摔死了..." };
-                    dialogue.instance.words = wordsText;
-                    dialogue.instance.StartEffect();
-                }
-                else
-                {
-                    
+            {                
                     if (OpenCabinet == false)
                     {
                         if(WhereIsMe == "櫃子")
@@ -458,8 +449,7 @@ public class GameManager : MonoBehaviour
                         string[] wordsText = { "櫃子已經開啟" };
                         dialogue.instance.words = wordsText;
                         dialogue.instance.StartEffect();
-                    }
-                }                    
+                    }                                
             }
             //我檢視梯子
             else if (Name1.GetComponent<BlockFull>().CurrentText == "我" && Motion.GetComponent<BlockFull>().CurrentText == "檢視" && Name2.GetComponent<BlockFull>().CurrentText == "梯子")
@@ -1321,6 +1311,7 @@ public class GameManager : MonoBehaviour
                     }
                     else
                     {
+                        OpenIronDoor = true;
                         string[] wordsText = { "開門後，看到一個人朝我衝了過來，正想呼救，仔細一看卻是喪屍!!" };
                         dialogue.instance.words = wordsText;
                         dialogue.instance.StartEffect();
@@ -1330,7 +1321,7 @@ public class GameManager : MonoBehaviour
                         defenceText.SetActive(true);
                         defenceText.GetComponent<Text>().text = "離被喪屍抓到還有 " + time + " 秒";
                         yield return WaitForSecondsOrKeyPress(2.2f, false);
-                        OpenIronDoor = true;
+                        
                     }
                 }
                 else
@@ -1428,14 +1419,14 @@ public class GameManager : MonoBehaviour
                         dialogue.instance.StartEffect();
                     }
                     else
-                    {                       
+                    {      
+                        GameOver = true;             
                         string[] wordsText = { "我覺得這個世界好難，所以我自殺了" };
                         dialogue.instance.words = wordsText;
                         dialogue.instance.StartEffect();              
                         aud.PlayOneShot(FireSound);
                         yield return WaitForSecondsOrKeyPress(1f, false);
                         aud.PlayOneShot(DeadSound);
-                        GameOver = true;
                     }
                 }
             }
@@ -1561,7 +1552,8 @@ public class GameManager : MonoBehaviour
                 if (WhereIsMe == "大門")
                 {
                     if(RaiseWhiteFlag ==false)
-                    {
+                    {       
+                        GameOver = true;
                         string[] wordsText = { "我打開了大門，但是由於我沒有舉白旗，被遠方的狙擊手誤以為是喪屍而射殺了..." };
                         dialogue.instance.words = wordsText;
                         dialogue.instance.StartEffect();
@@ -1569,8 +1561,7 @@ public class GameManager : MonoBehaviour
                         yield return WaitForSecondsOrKeyPress(2f, true);
                         aud.PlayOneShot(FireSound, 1f);
                         yield return WaitForSecondsOrKeyPress(3f, false);
-                        aud.PlayOneShot(DeadSound, 1f);
-                        GameOver = true;
+                        aud.PlayOneShot(DeadSound, 1f);    
                     }
                     else
                     {
@@ -1707,11 +1698,11 @@ public class GameManager : MonoBehaviour
         {
             if (time <= 0 && GameOver == false)
             {
+                GameOver = true;
                 string[] wordsText = { "你被喪屍啃食成了碎塊" };
                 dialogue.instance.words = wordsText;
                 dialogue.instance.StartEffect();
-                aud.PlayOneShot(ZombeEatSound);
-                GameOver = true;
+                aud.PlayOneShot(ZombeEatSound);           
             }
             if (time > 0 && IfAttack == false && OpenIronDoor == true)
             {

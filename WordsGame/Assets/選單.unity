@@ -1352,6 +1352,7 @@ MonoBehaviour:
   GameOver: 0
   pass: 0
   FirstSantance: 0
+  StopDia: 0
   aud: {fileID: 470169253}
   WalkSound: {fileID: 8300000, guid: 873957808c0e6e344975bd9d9484eb45, type: 3}
   DoorLockSound: {fileID: 8300000, guid: 417b36699becc6d4cb4c522630c3a4da, type: 3}
@@ -1955,7 +1956,7 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1992737771}
-  m_RootOrder: 8
+  m_RootOrder: 9
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
@@ -2018,6 +2019,41 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1347207629}
   m_CullTransparentMesh: 0
+--- !u!1 &1377143092
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1377143093}
+  m_Layer: 5
+  m_Name: "\u62D6\u79FB\u6642\u5361\u7247\u6700\u4E0A\u9762"
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &1377143093
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1377143092}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 1992737771}
+  m_RootOrder: 8
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 100, y: 100}
+  m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1001 &1521732580
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2329,6 +2365,7 @@ RectTransform:
   - {fileID: 1132758468}
   - {fileID: 693782550}
   - {fileID: 469887249}
+  - {fileID: 1377143093}
   - {fileID: 1347207630}
   m_Father: {fileID: 0}
   m_RootOrder: 1

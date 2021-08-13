@@ -17,12 +17,14 @@ public class MoveWithMouse : MonoBehaviour, IDragHandler, IBeginDragHandler, IEn
     Vector3 originTraslate;
     public GameManager GM;
     public GameObject CardBox;
+    public Transform TopCardObject;
 
     public void Start()
     {
         GM = GameObject.Find("遊戲管理器").GetComponent<GameManager>();  
         CardWords = gameObject.transform.Find("字").GetComponent<Text>().text;
         CardBox = GameObject.Find("玩家選字欄位");
+        TopCardObject = GameObject.Find("拖移時卡片最上面").transform;
     }
     /// <summary>
     /// 開始拖拽的時候
@@ -36,6 +38,7 @@ public class MoveWithMouse : MonoBehaviour, IDragHandler, IBeginDragHandler, IEn
             offPos = transform.position - arragedPos;
             originTraslate = gameObject.transform.position;
         }
+       gameObject.transform.parent = TopCardObject;
     }
 
     /// <summary>
@@ -59,6 +62,7 @@ public class MoveWithMouse : MonoBehaviour, IDragHandler, IBeginDragHandler, IEn
             if(Block.tag == "字卡放置欄")
             {
                 transform.position = originTraslate;
+                gameObject.transform.parent = CardBox.transform;
             }
             else
             {
@@ -113,6 +117,8 @@ public class MoveWithMouse : MonoBehaviour, IDragHandler, IBeginDragHandler, IEn
                 else
                 {
                     transform.position = originTraslate;
+                    if (LastBlock == null) gameObject.transform.parent = CardBox.transform;
+                    else gameObject.transform.parent = LastBlock.transform;
                 }
             }           
         }
@@ -121,6 +127,7 @@ public class MoveWithMouse : MonoBehaviour, IDragHandler, IBeginDragHandler, IEn
             if(StartinCardBox == true)
             {
                 transform.position = originTraslate;
+                gameObject.transform.parent = CardBox.transform;
             }
             else
             {
@@ -142,8 +149,8 @@ public class MoveWithMouse : MonoBehaviour, IDragHandler, IBeginDragHandler, IEn
     {  
          if (other.tag == "名詞欄位" && gameObject.tag=="名詞")
          {
-              Block = other.gameObject;
-              inblock = true;
+            Block = other.gameObject;
+            inblock = true;
          }
          if (other.tag == "動詞欄位" && gameObject.tag == "動詞")
          {
